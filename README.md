@@ -1,0 +1,1 @@
+This game is where you explore a terrain. There will be *more* features soon!
