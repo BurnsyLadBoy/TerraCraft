@@ -1,4 +1,4 @@
-Graphics3D 1366, 768, 32, 1
+Graphics3D 800, 600, 32, 0
 
 SetBuffer BackBuffer()
 
@@ -21,11 +21,12 @@ grass_tex=LoadTexture( "texture.jpg" )
 ScaleTexture grass_tex, 3, 3
 EntityTexture terrain,grass_tex,0,1
 
-tree=LoadMesh("rallycar1.3ds")
+tree=LoadMesh("supplies.x")
 PositionEntity tree, 100, TerrainHeight(terrain, 100, 100) * 50, 100
+ScaleEntity tree, 0.5, 0.5, 0.5
 
 SeedRnd (MilliSecs())
-For i = 1 To 50
+For i = 1 To 10
 	newtree = CopyEntity(tree)
 	x = Rand(0, 512)
 	y = Rand(0, 512)
@@ -44,7 +45,7 @@ EntityFX water, 16
 
 PositionEntity camera, 200, 20, 50
 
-frameTimer=CreateTimer(30)
+frameTimer=CreateTimer(60)
 wireframetoggle = False
 
 EntityType camera, 1
@@ -58,11 +59,27 @@ yaw# = 0
 ripple# = 0
 yvel# = 0
 
+renderdistance = False
+
+
+
 HidePointer
 
 While Not KeyHit(1)
 
 	WaitTimer(frameTimer)
+
+	If KeyHit(14) Then
+		renderdistance = Not renderdistance
+	EndIf
+
+	If renderdistance = True
+		CameraRange camera, 1, 50
+	EndIf
+	
+	If renderdistance = False
+		CameraRange camera, 1, 999999
+	EndIf
 	
 	yaw = yaw + (GraphicsWidth() / 2 - MouseX()) * 0.3
 	pitch = pitch - (GraphicsHeight() / 2 - MouseY()) * 0.2
