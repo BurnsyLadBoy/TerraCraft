@@ -169,8 +169,13 @@ While Not KeyHit(1)
 	UpdateWorld
 	RenderWorld
 	
+	Rect 2,2,32,32,0
+	Color 175,175,175
+	Rect 3,3,30,30,1
+	Color 0,0,0
+	
 	Flip
-
+	
 Wend
 End
 
