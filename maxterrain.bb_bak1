@@ -1,4 +1,4 @@
-Graphics3D 800, 600, 32, 0
+Graphics3D 800, 600, 32, 2
 
 SetBuffer BackBuffer()
 
@@ -45,8 +45,13 @@ EntityFX water, 16
 
 PositionEntity camera, 200, 20, 50
 
-frameTimer=CreateTimer(60)
+frameTimer=CreateTimer(30)
 wireframetoggle = False
+
+Global footstep1,footstep2,sndfootstep1,sndfootstep2
+sndfootstep1=LoadSound("footstep1.wav")
+sndfootstep2=LoadSound("footstep2.wav")
+chnfootstep1=PlaySound(sndfootstep1)
 
 EntityType camera, 1
 EntityType terrain, 2
@@ -61,20 +66,19 @@ yvel# = 0
 
 renderdistance = False
 
-
-
 HidePointer
 
 While Not KeyHit(1)
 
 	WaitTimer(frameTimer)
 
+	
 	If KeyHit(14) Then
 		renderdistance = Not renderdistance
 	EndIf
 
 	If renderdistance = True
-		CameraRange camera, 1, 75
+		CameraRange camera, 1, 50
 	EndIf
 	
 	If renderdistance = False
@@ -116,6 +120,9 @@ While Not KeyHit(1)
 	
 	If xco <> 0 Or yco <> 0
 		TranslateEntity camera, Cos(ATan2(yco, xco) + yaw) * 0.2, 0, Sin(ATan2(yco, xco) + yaw) * 0.2
+		If ripple Mod 15 = 0 Then
+			footsteps()
+		EndIf
 	EndIf
 	
 	If KeyHit(28) Then
@@ -125,14 +132,21 @@ While Not KeyHit(1)
 	
 	yvel = yvel - 0.02
 	
+	If EntityY(camera) < 11.5 Then
+		yvel = yvel + 0.04
+		yvel = yvel * 0.98
+	EndIf
+
 	If EntityY(camera) < 10 Then
+		RotateEntity water, 180, 0, 0
 		yvel = yvel + 0.04
 		yvel = yvel * 0.98
 		CameraFogMode camera, 1
 	Else
+		RotateEntity water, 0, 0, 0
 		CameraFogMode camera, 0
 	EndIf
-	
+
 	If EntityCollided(camera, 2) Then
 		yvel = 0
 				
@@ -159,6 +173,23 @@ While Not KeyHit(1)
 
 Wend
 End
+
+Function footsteps()
+			f1true = Rand(0, 1)
+			f2true = Rand(0, 1)
+			If f1true And f2true = 1 Then
+				f2true = 0
+			EndIf
+			If f1true And f2true = 0 Then
+				f1true = 1
+			EndIf
+			If f1true = 1 Then
+				chnfootstep1=PlaySound(sndfootstep1)
+			EndIf
+			If f2true = 1 Then
+				chnfootstep2=PlaySound(sndfootstep2)
+			EndIf
+End Function
 
 Function MakeSkyBox( file$ )
 
@@ -201,7 +232,7 @@ Function MakeSkyBox( file$ )
 
 	ScaleMesh m,100,100,100
 	FlipMesh m
-	EntityFX m,9
+	EntityFX m,1
 	EntityOrder m,10
 	Return m
 	
