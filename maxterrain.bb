@@ -51,7 +51,6 @@ wireframetoggle = False
 Global footstep1,footstep2,sndfootstep1,sndfootstep2
 sndfootstep1=LoadSound("footstep1.wav")
 sndfootstep2=LoadSound("footstep2.wav")
-chnfootstep1=PlaySound(sndfootstep1)
 
 EntityType camera, 1
 EntityType terrain, 2
